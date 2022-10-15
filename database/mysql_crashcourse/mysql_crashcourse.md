@@ -6,11 +6,11 @@
 
 数据库软件称为DBMS（数据库管理系统）。数据库 是通过DBMS创建和操纵的容器。
 
-**表**：存储在表中的数据是一种类型的数据或一个 清单。（唯一）
+**表**：存储在表中的数据是一种类型的数据或一个清单。（唯一）
 
-模式（schema）： 关于数据库和表的布局及特性的信息。
+模式（schema）： 关于数据库和表的布局及特性的信息。有时，模式用作数据库的同义词。
 
-**列**（column）： 表中的一个字段。所有表都是由一个或多个列组 成的。数据库中每个列都有相应的数据类型。
+**列**（column）： 表中的一个字段。所有表都是由一个或多个列组成的。数据库中每个列都有相应的数据类型。
 
 **行**：表中的一个记录，表中的数据是按行存储的。
 
@@ -26,10 +26,12 @@
 
 ## ch2 MySQL简介
 
-**MySQL**:MySQL是一种DBMS，即它是一种数据库软件。是基于客户机—服 务器的数据库。
+DBMS可分为两类：一类为基于共享文件系统的DBMS，另一类为基 于客户机—服务器的DBMS。	
+
+**MySQL**:MySQL是一种DBMS，即它是一种数据库软件。是基于客户机—服务器的数据库管理系统。
 
 - 服务器软件为MySQL DBMS。你可以在本地安装的副本上运行， 也可以连接到运行在你具有访问权的远程服务器上的一个副本。
-- 客户机可以是MySQL提供的工具、脚本语言（如Perl）、Web应用 开发语言（如ASP、ColdFusion、JSP和PHP）、程序设计语言（如 C、C++、Java）等。
+- 客户机可以是MySQL提供的工具、脚本语言（如Perl）、Web应用开发语言（如ASP、ColdFusion、JSP和PHP）、程序设计语言（如 C、C++、Java）等。
 
 **MySQL工具（客户机）：**mysql命令行实用程序、MySQL Administrator、MySQL Query Browser。 
 
@@ -37,7 +39,42 @@
 
 ## ch3 使用MySQL
 
+### 连接
 
+```sql
+mysql -h localhost -P 3306 -u root -p
+```
+
+### 选择数据库
+
+```sql
+USE crashcourse;
+```
+
+### 了解数据库和表
+
+```sql
+# 返回可用数据库的一个列表
+SHOW DATABASES;
+# 返回当前选择的数据库内可用表的列表
+SHOW TABLES;
+# SHOW 也可以用来显示表列
+SHOW COLUMNS FROM customers;
+# DESCRIBE 作为 SHOW COLUMNS FROM 的一种快捷方式
+DESCRIBE customers;
+#################################
+# 所支持的其他SHOW语句还有:
+# SHOW STATUS用于显示广泛的服务器状态信息
+# SHOW CREATE DATABASE和SHOW CREATE TABLE，分别用来显示创建特定数据库或表的MySQL语句
+# SHOW GRANTS，用来显示授予用户（所有用户或特定用户）的安全权限；
+# SHOW ERRORS和SHOW WARNINGS，用来显示服务器错误或警告消息。
+```
+
+
+
+## ch4 检索数据
+
+使用SELECT语句从表中检索一个或多个数据列。
 
 
 
