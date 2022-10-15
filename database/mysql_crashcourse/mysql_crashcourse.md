@@ -95,7 +95,7 @@ MySQL Adiminstrator和MySQL Query Browser不作为MySQL的核心 部分安装，
 
 **vendors表**：
 
-![img](vendors.png)
+![img](img/vendors.png)
 
 - 表示存储销售产品的供应商
 - vend_id 列用来匹配产品和供应商
@@ -103,7 +103,7 @@ MySQL Adiminstrator和MySQL Query Browser不作为MySQL的核心 部分安装，
 
 **products表**：
 
-![img](products.png)
+![img](img/products.png)
 
 - 产品目录，每行一个产品
 - prod_id 作为主键
@@ -111,14 +111,14 @@ MySQL Adiminstrator和MySQL Query Browser不作为MySQL的核心 部分安装，
 
 **customers表：**
 
-![img](customers.png)
+![img](img/customers.png)
 
 - 存储所有顾客的信息
 - cust_id 为主键，是一个自动增量字段。
 
 **orders表：**
 
-![img](orders.png)
+![img](img/orders.png)
 
 - 存储顾客订单（不是订单细节）
 - order_num为主键，是一个自动增量字段。
@@ -126,7 +126,7 @@ MySQL Adiminstrator和MySQL Query Browser不作为MySQL的核心 部分安装，
 
 **orderitems表：**
 
-![img](orderitems.png)
+![img](img/orderitems.png)
 
 - 存贮每个订单中的实际物品，每个订单的每个物品占一行。
 - order_num和order_item 作为主键。
@@ -134,7 +134,7 @@ MySQL Adiminstrator和MySQL Query Browser不作为MySQL的核心 部分安装，
 
 **productnotes表：**
 
-![img](productnotes.png)
+![img](img/productnotes.png)
 
 - 存储与特定产品有关的注释。
 - note_id 为主键。
@@ -172,7 +172,7 @@ MySQL Adiminstrator和MySQL Query Browser不作为MySQL的核心 部分安装，
 
 长度可变，`TEXT`属于变长串类型
 
-![img](string.png)
+![img](img/string.png)
 
 **既然变长数据类型这样灵活，为什么还要使用定长数据类型？**
 
@@ -182,14 +182,14 @@ MySQL Adiminstrator和MySQL Query Browser不作为MySQL的核心 部分安装，
 
 ### 数值数据类型
 
-![img](numeric.png)
+![img](img/numeric.png)
 
 ### 日期和时间数据类型
 
-![img](date_time.png)
+![img](img/data_time.png)
 
 ### 二进制数据类型
 
 二进制数据类型可存储任何数据（甚至包括二进制信息），如图像、 多媒体、字处理文档等
 
-![img](binary.png)
+![img](img/binary.png)
