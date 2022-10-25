@@ -1,12 +1,10 @@
-
-
 # MySQL必知必会
 
 ## ch1 了解SQL
 
 **数据库**：一个文件或者一组文件。
 
-数据库软件称为DBMS（数据库管理系统）。数据库 是通过DBMS创建和操纵的容器。
+数据库软件称为DBMS（数据库管理系统）。数据库是通过DBMS创建和操纵的容器。
 
 **表**：存储在表中的数据是一种类型的数据或一个清单。（唯一）
 
@@ -243,7 +241,7 @@ WHERE prod_price=2.50;
 
 从products表中检索两个列，但不返回所有行，只返回prod_price值为2.50的行。这里采用了相等测试。
 
-- 在同时使用ORDER BY和WHERE子句时，应 该让ORDER BY位于WHERE之后，否则将会产生错误
+- 在同时使用ORDER BY和WHERE子句时，应该让ORDER BY位于WHERE之后，否则将会产生错误
 
 ### WHERE子句操作符
 
@@ -303,7 +301,7 @@ WHERE prod_price BETWWEN 5 AND 10;
 
 #### 空值检查
 
-NULL 无值（no value），它与字段包含0、空字符串或仅仅包含 空格不同。
+NULL 无值（no value），它与字段包含0、空字符串或仅仅包含空格不同。
 
 检查具有NULL值的列。
 
@@ -339,7 +337,7 @@ WHERE vend_id = 1003 AND prod_price <= 10;
 
 **OR WHERE子句中使用的关键字，用来表示检索匹配任一给定条件的行。**
 
-由任一个指定供应商制造的所有产品的产品 名和价格。
+由任一个指定供应商制造的所有产品的产品名和价格。
 
 ```sql
 SELECT prod_name,prod_price
@@ -351,7 +349,7 @@ WHERE vend_id = 1003 OR vend_id = 1004;
 
 AND 高于 OR,圆括号具有较AND或OR操作符高 的计算次序。
 
-列出价格为10美元（含）以上且由1002或1003制 造的所有产品
+列出价格为10美元（含）以上且由1002或1003制造的所有产品
 
 ```sql
 SELECT prod_name,prod_price
@@ -359,7 +357,7 @@ FROM products
 WHERE (vend_id = 1002 OR vend_id = 1003) AND prod_price >= 10;
 ```
 
-**任何时候使用具有AND和OR操作 符的WHERE子句，都应该使用圆括号明确地分组操作符。**
+**任何时候使用具有AND和OR操作符的WHERE子句，都应该使用圆括号明确地分组操作符。**
 
 #### IN 操作符
 
@@ -403,7 +401,7 @@ ORDER BY prod_name;
 
 %表示任何字符出现任意次数。
 
-例：了找出所有以词jet起头的产品
+例：找出所有以词jet起头的产品
 
 ```sql
 SELECT prod_id,prod_name
@@ -425,7 +423,7 @@ WHERE prod_name LIKE '%anvil%';
 
 - 除了一个或多个字符外，%还能匹配0个字符。% 代表搜索模式中给定位置的0个、1个或多个字符。
 - 尾空格可能会干扰通配符匹配。
-- 虽然似乎%通配符可以匹配任何东西，但有一个例 外，即NULL。即使是WHERE prod_name LIKE '%'也不能匹配 用值NULL作为产品名的行。
+- 虽然似乎%通配符可以匹配任何东西，但有一个例 外，即NULL。即使是WHERE prod_name LIKE '%'也不能匹配用值NULL作为产品名的行。
 
 ##### 下划线（_）通配符
 
@@ -631,7 +629,7 @@ WHERE order_date = '2005-09-01';
 更可靠的 SELECT语句为：
 
 ```sql
-SELECT cust_id,order_num
+ SELECT cust_id,order_num
 FROM orders
 WHERE Date(order_date) = '2005-09-01';
 ```
@@ -816,6 +814,100 @@ SELECT子句及其顺序：
 | HAVING   | 组级过滤           | 否                     |
 | ORDER BY | 输出排序顺序       | 否                     |
 | LIMIT    | 要检索的行数       | 否                     |
+
+## ch14 使用子查询
+
+### 子查询
+
+子查询（subquery），即嵌套在其他查询中的查询。
+
+### 利用子查询进行过滤
+
+例：要列出订购物品TNT2的所有客户。
+
+```sql
+SELECT cust_name,cust_contact
+FROM customers
+WHERE cust_id IN (SELECT cust_id
+				  FROM orders
+				  WHERE order_num IN (SELECT order_num
+				  					  FROM orderitems
+				  					  WHERE prod_id = 'TNT2'));
+```
+
+最里边的子查询返回订单号列表，此列表用于其外面的 子查询的WHERE子句。外面的子查询返回客户ID列表，此客户ID列表用于 最外层查询的WHERE子句。最外层查询确实返回所需的数据。
+
+### 作为计算字段使用子查询
+
+例：显示customers 表中每个客户的订单总数。
+
+```
+SELECT cust_name,
+	   cust_state,
+	   (SELECT COUNT(*)
+	    FROM orders
+	    WHERE orders.cust_id = customers.cust_id) AS orders
+FROM customers
+ORDER BY cust_name;
+```
+
+## ch15 联结表
+
+#### 关系表：
+
+关系表的设计就是要保证把信息分解成多个表，**一类数据 一个表**。各表通过某些常用的值（即关系设计中的关系（relational））互相关联。
+
+#### 外键：
+
+外键为某个表中的一列，它包含另一个表的主键值，定义了两个表之间的关系。
+
+#### 可伸缩性：
+
+能够适应不断增加的工作量而不失败。
+
+### 联结
+
+简单地说，联结是一种机制，用来在一条SELECT 语句中关联表。
+
+联结的创建：规定要联结的所有表以及它们如何关联。**首先列出所有表，然后定义表之间的关系**。
+
+在联结两个表时，你实际上做的是将第一个表中的每一行与第二个表中的每一行配对。WHERE子句作为过滤条件，它只包含那些匹配给定条件（这里是联结条件）的行。
+
+例：显示编号为20005的订单中的物品。
+
+```sql
+SELECT prod_name,vend_name,prod_price,quantity
+FROM orderitems,vendors,products
+WHERE products.vend_id = vendors.vend_id
+	AND	orderitems.prod_id = products.prod_id
+	AND order_num = 20005;
+```
+
+改写ch14中的例子，返回订购产品TNT2的客户列表：
+
+子查询：
+
+```sql
+SELECT cust_name,cust_contact
+FROM customers
+WHERE cust_id IN (SELECT cust_id
+				  FROM orders
+				  WHERE order_num IN (SELECT order_num
+				  					  FROM orderitems
+				  					  WHERE prod_id = 'TNT2'));
+```
+
+使用联结：
+
+```sql
+SELECT cust_name,cust_contact
+FROM customers,orders,orderitems
+WHERE customers.cust_id = orders.cust_id
+	AND orderitems.order_num = orders.order_num
+	AND prod_id = 'TNT2';
+```
+
+## ch16 创建高级联结
 
 
 
