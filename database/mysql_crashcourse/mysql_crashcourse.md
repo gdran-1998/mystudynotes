@@ -909,6 +909,110 @@ WHERE customers.cust_id = orders.cust_id
 
 ## ch16 创建高级联结
 
+### 使用表别名
+
+```sql
+SELECT cust_name,cust_contact
+FROM customers AS c,orders AS o,orderitems AS oi
+WHERE c.cust_id = o.cust_id
+	AND o.order_num = oi.order_num
+	AND prod_id = 'TNT2';
+```
+
+注：表别名只在查询执行中使用。与列别名不一样，表别名不返回到客户机。
+
+### 使用不同类型的联结
+
+到目前为止，我们使用了内部联结或等值联结的简单联结。还有其它三种联结：自联结、自然联结和外部联结。
+
+#### 自联结
+
+例：发现某物品（其ID为DTNTR）存在问题，因此想知道生产该物品的供应商生产的其他物品是否也存在这些问题。此查询要求首先找到 生产ID为DTNTR的物品的供应商，然后找出这个供应商生产的其他物品。
+
+使用子查询：
+
+```sql
+SELECT prod_id,prod_name
+FROM products
+WHERE vend_id = (SELECT vend_id
+				 FROM products
+				 WHERE prod_id = 'DTNTR');
+```
+
+自联结：
+
+```sql
+SELECT p1.prod_id,p1.prod_name
+FROM products AS p1,products AS p2
+WHERE p1.vend_id = p2.vend_id
+	AND p2.prod_id = 'DTNTR';
+```
+
+#### 自然联结
+
+自然联结排除多次出现，使每个列只返回一次。
+
+```sql
+SELECT c.*,o.order_num,o.order_date,oi.prod_id,oi.quantity,oi.item_price
+FROM customers AS c,orders AS o,orderitems AS oi
+WHERE c.cust_id = o.cust_id
+	AND oi.order_num = o.order_num
+	AND prod_id = 'FB';
+```
+
+#### 外部联结
+
+联结包含了那些在相关表中没有关联行的行。这种类型的联结称为外部联结。
+
+检索所有客户及其订单(内联结)：
+
+```sql
+SELECT customers.cust_id,orders.order_num
+FROM customers INNER JOIN orders
+	ON customers.cust_id = orders.cust_id;
+```
+
+外部联结语法类似。为了检索所有客户，包括那些没有订单的客户， 可如下进行：
+
+```sql
+SELECT customers.cust_id,orders.order_num
+FROM customers LEFT OUTER JOIN orders
+	ON customers.cust_id = orders.cust_id;
+```
+
+### 使用带聚集函数的联结
+
+例：检索所有客户及每个客户所 下的订单数
+
+```sql
+SELECT customers.cust_id,
+	   customers.cust_name,
+	   COUNT(orders.order_num) AS num_ord
+FROM customers INNER JOIN orders
+	ON customers.cust_id = orders.cust_id
+GROUP BY customers.cust_id;
+```
+
+此SELECT语句使用INNER JOIN将customers和orders表互相关联。 GROUP BY 子句按客户分组数据，因此，函数调用 COUNT (orders.order_num)对每个客户的订单计数，将它作为num_ord返回。
+
+例：使用左外部联结来包含所有客户，甚至包含那些没有 任何下订单的客户。
+
+```sql
+SELECT customers.cust_id,
+	   customers.cust_name,
+	   COUNT(orders.order_num) AS num_ord
+FROM customers LEFT OUTER JOIN orders
+	ON customers.cust_id = orders.cust_id
+GROUP BY customers.cust_id;
+```
+
+### 使用联结和联结条件
+
+- 注意所使用的联结类型。一般我们使用内部联结，但使用外部联 结也是有效的。
+- 保证使用正确的联结条件，否则将返回不正确的数据。
+- 应该总是提供联结条件，否则会得出笛卡儿积。
+- 在一个联结中可以包含多个表，甚至对于每个联结可以采用不同 的联结类型。虽然这样做是合法的，一般也很有用，但应该在一 起测试它们前，分别测试每个联结。这将使故障排除更为简单。
+
 
 
 ## 附录A： MySQL入门
