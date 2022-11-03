@@ -393,9 +393,9 @@ ORDER BY prod_name;
 
 **通配符**（wildcard） 用来匹配值的一部分的特殊字符。
 
-**搜索模式**（search pattern）① 由字面值、通配符或两者组合构成的搜索条件。
+**搜索模式**（search pattern）由字面值、通配符或两者组合构成的搜索条件。
 
-通配符本身实际是SQL的WHERE子句中有特殊含义的字符，SQL支持几 种通配符。
+通配符本身实际是SQL的WHERE子句中有特殊含义的字符，SQL支持几种通配符。
 
 ##### 百分号（%）通配符
 
@@ -423,11 +423,11 @@ WHERE prod_name LIKE '%anvil%';
 
 - 除了一个或多个字符外，%还能匹配0个字符。% 代表搜索模式中给定位置的0个、1个或多个字符。
 - 尾空格可能会干扰通配符匹配。
-- 虽然似乎%通配符可以匹配任何东西，但有一个例 外，即NULL。即使是WHERE prod_name LIKE '%'也不能匹配用值NULL作为产品名的行。
+- 虽然似乎%通配符可以匹配任何东西，但有一个例外，即NULL。即使是WHERE prod_name LIKE '%'也不能匹配用值NULL作为产品名的行。
 
 ##### 下划线（_）通配符
 
-下划线的用途与%一样，但下划 线只匹配单个字符而不是多个字符。
+下划线的用途与%一样，但下划线只匹配单个字符而不是多个字符。
 
 ```sql
 SELECT prod_id,prod_name
@@ -451,7 +451,7 @@ WHERE prod_name LIKE '_ ton anvil';
 
 ### 使用MySQL正则表达式
 
-正则表达式的作 用是匹配文本，将一个模式（正则表达式）与一个文本串进行比较。MySQL 用WHERE子句对正则表达式提供了初步的支持，允许你指定正则表达式， 过滤SELECT检索出的数据。
+正则表达式的作用是匹配文本，将一个模式（正则表达式）与一个文本串进行比较。MySQL 用WHERE子句对正则表达式提供了初步的支持，允许你指定正则表达式， 过滤SELECT检索出的数据。
 
 #### 基本字符匹配
 
@@ -516,13 +516,13 @@ ORDER BY vend_name;
 
 ## ch10 创建计算字段
 
-数据库知道SELECT语句中哪些列是实际的 表列，哪些列是计算字段。
+数据库知道SELECT语句中哪些列是实际的表列，哪些列是计算字段。
 
 ### 拼接字段
 
 将值联结到一起构成单个值。MySQL使用 Concat( ) 函数。Concat()需要一个或多个指定的串，各个串之间用逗号分隔。
 
-例：生成一个供应商报表， 需要在供应商的名字中按照name(location)这样的格式列出供应商的位 置。
+例：生成一个供应商报表， 需要在供应商的名字中按照name(location)这样的格式列出供应商的位置。
 
 ```sql
 SELECT Concat(vend_name,'(',vend_country,')')
@@ -532,7 +532,7 @@ ORDER BY vend_name;
 
 使用别名：
 
-别名（alias）是一个字段或值 的替换名。别名用AS关键字赋予。
+别名（alias）是一个字段或值的替换名。别名用AS关键字赋予。
 
 ```sql
 SELECT Concat(vend_name,'(',vend_country,')') AS vend_title
@@ -629,7 +629,7 @@ WHERE order_date = '2005-09-01';
 更可靠的 SELECT语句为：
 
 ```sql
- SELECT cust_id,order_num
+SELECT cust_id,order_num
 FROM orders
 WHERE Date(order_date) = '2005-09-01';
 ```
@@ -674,7 +674,7 @@ WHERE Year(order_date) = 2005 AND Month(order_date) = 9;
 
 使我们能够对行进行计数，计算和与平均数，获得最大和最小值而不用检索所有数据。
 
-**聚集函数**:运行在行组上，计算和返回单 个值的函数。
+**聚集函数**:运行在行组上，计算和返回单个值的函数。
 
 **SQL 聚集函数：**
 
@@ -688,7 +688,7 @@ WHERE Year(order_date) = 2005 AND Month(order_date) = 9;
 
 #### AVG()函数
 
-AVG()只能用来确定特定数值列的平均值，而 且列名必须作为函数参数给出。为了获得多个列的平均值， 必须使用多个AVG()函数。
+AVG()只能用来确定特定数值列的平均值，而且列名必须作为函数参数给出。为了获得多个列的平均值， 必须使用多个AVG()函数。
 
 例：返回products表中所有产品的平均价格
 
@@ -714,6 +714,22 @@ COUNT()函数有两种使用方式。
 - 使用COUNT(*)对表中行的数目进行计数，不管表列中包含的是空 值（NULL）还是非空值。
 - 使用COUNT(column)对特定列中具有值的行进行计数，忽略 NULL值。
 
+返回customers表中客户的总数：
+
+```sql
+SELECT COUNT(*) AS num_cust
+FROM customers;
+```
+
+只对具有电子邮件地址的客户计数：
+
+```sql
+SELECT COUNT(cust_email) AS num_cust
+FROM customers;
+```
+
+如果指定列名，则指定列的值为空的行被COUNT() 函数忽略，但如果COUNT()函数中用的是星号（*），则不忽 略。
+
 ### 聚集不同值
 
 例：使用AVG()函数返回特定供应商提供的产品的平均价格。
@@ -733,8 +749,6 @@ SELECT COUNT(*) AS num_items,
 		AVG(prod_price) AS price_avg
 FROM products;
 ```
-
-
 
 ## ch13 分组数据
 
@@ -756,7 +770,7 @@ HAVING
 
 HAVING非常类似于WHERE 。唯一的差别是 WHERE过滤行，而HAVING过滤分组。
 
-例：列出至少有两个订单的所有 顾客。
+例：列出至少有两个订单的所有顾客。
 
 ```sql
 SELECT cust_id,COUNT(*) AS orders
@@ -823,7 +837,7 @@ SELECT子句及其顺序：
 
 ### 利用子查询进行过滤
 
-例：要列出订购物品TNT2的所有客户。
+例：列出订购物品TNT2的所有客户。
 
 ```sql
 SELECT cust_name,cust_contact
@@ -851,6 +865,8 @@ FROM customers
 ORDER BY cust_name;
 ```
 
+这条 SELECT 语句对 customers 表中每个客户返回 3 列 ： cust_name、cust_state和orders。orders是一个计算字段， 它是由圆括号中的子查询建立的。该子查询对检索出的每个客户执行一 次。在此例子中，该子查询执行了5次，因为检索出了5个客户。
+
 ## ch15 联结表
 
 #### 关系表：
@@ -872,6 +888,27 @@ ORDER BY cust_name;
 联结的创建：规定要联结的所有表以及它们如何关联。**首先列出所有表，然后定义表之间的关系**。
 
 在联结两个表时，你实际上做的是将第一个表中的每一行与第二个表中的每一行配对。WHERE子句作为过滤条件，它只包含那些匹配给定条件（这里是联结条件）的行。
+
+笛卡儿积：由没有联结条件的表关系返回 的结果为笛卡儿积。检索出的行的数目将是第一个表中的行数乘 以第二个表中的行数。
+
+例：
+
+```sql
+SELECT vend_name,prod_name,prod_price
+FROM products,vendors
+WHERE products.vend_id = vendors.vend_id
+ORDER BY vend_name,prod_name;
+```
+
+**内部联结**：
+
+```sql
+SELECT vend_name,prod_name,prod_price
+FROM products INNER JOIN vendors
+	ON products.vend_id = vendors.vend_id;
+```
+
+### 联结多个表
 
 例：显示编号为20005的订单中的物品。
 
@@ -950,7 +987,7 @@ WHERE p1.vend_id = p2.vend_id
 
 #### 自然联结
 
-自然联结排除多次出现，使每个列只返回一次。
+无论何时对表进行联结，应该至少有一个列出现在不止一个表中（被 联结的列）。标准的联结（前一章中介绍的内部联结）返回所有数据，甚至相同的列多次出现。**自然联结排除多次出现，使每个列只返回一次。**
 
 ```sql
 SELECT c.*,o.order_num,o.order_date,oi.prod_id,oi.quantity,oi.item_price
@@ -1012,6 +1049,225 @@ GROUP BY customers.cust_id;
 - 保证使用正确的联结条件，否则将返回不正确的数据。
 - 应该总是提供联结条件，否则会得出笛卡儿积。
 - 在一个联结中可以包含多个表，甚至对于每个联结可以采用不同 的联结类型。虽然这样做是合法的，一般也很有用，但应该在一 起测试它们前，分别测试每个联结。这将使故障排除更为简单。
+
+## ch17 组合查询
+
+有两种基本情况，其中需要使用组合查询： 
+
+- 在单个查询中从不同的表返回类似结构的数据； 
+
+- 对单个表执行多个查询，按单个查询返回数据。
+
+### 创建组合查询
+
+例：检索价格不高于5的所有物品
+
+```sql
+SELECT vend_id,prod_id,prod_price
+FROM products
+WHERE prod_price <= 5;
+```
+
+使用IN找出供应商1001和1002生产的所有物品
+
+```sql
+SELECT vend_id,prod_id,prod_price
+FROM products
+WHERE vend_id IN (1001,1002);
+```
+
+使用UNION
+
+```sql
+SELECT vend_id,prod_id,prod_price
+FROM products
+WHERE prod_price <= 5
+UNION
+SELECT vend_id,prod_id,prod_price
+FROM products
+WHERE vend_id IN (1001,1002);
+```
+
+#### UNION规则
+
+- UNION必须由两条或两条以上的SELECT语句组成。
+- UNION中的每个查询必须包含相同的列、表达式或聚集函数
+- 列数据类型必须兼容。
+
+**UNION从查询结果集中自动去除了重复的行，使用UNION ALL，MySQL不取消重复的行。**
+
+SELECT语句的输出用ORDER BY子句排序。在用UNION组合查询时，只 能使用一条ORDER BY子句，它必须出现在最后一条SELECT语句之后。
+
+## ch18 全文本搜索
+
+两个最常使用的引擎为MyISAM和InnoDB， 前者支持全文本搜索，而后者不支持。
+
+### 理解全文本搜索
+
+LIKE关键字，它利用通配操作符匹配文本（和部分文 本）。使用LIKE，能够查找包含特殊值或部分值的行（不管这些值位于列内什么位置）。
+
+使用正则表达式，可以编写查找所需行的非常复杂的匹配模式。
+
+使用全文本搜索时，MySQL不需要分别查看每个行，不需要分别分析和处理每个词。MySQL创建指定列中各词的一个索引，搜索可以针对这些词进行。这样，MySQL可以快速有效地决定哪些词匹配（哪些行包含它们）， 哪些词不匹配，它们匹配的频率，等等。
+
+### 使用全文本搜索
+
+为了进行全文本搜索，必须索引被搜索的列，而且要随着数据的改 变不断地重新索引。在对表列进行适当设计后，MySQL会自动进行所有 的索引和重新索引。
+
+#### 启动全文本搜索支持
+
+一般在创建表时启用全文本搜索。
+
+```sql
+CREATE TABLE productnotes
+(
+  note_id    int           NOT NULL AUTO_INCREMENT,
+  prod_id    char(10)      NOT NULL,
+  note_date datetime       NOT NULL,
+  note_text  text          NULL ,
+  PRIMARY KEY(note_id),
+  FULLTEXT(note_text)s
+) ENGINE=MyISAM;
+```
+
+为了进行全文本搜索， MySQL根据子句FULLTEXT(note_text)的指示对它进行索引。在定义之后，MySQL自动维护该索引。在增加、更新或删除行时， 索引随之自动更新。
+
+#### 进行全文本搜索
+
+在索引之后，使用两个函数Match()和Against()执行全文本搜索， 其中Match()指定被搜索的列，Against()指定要使用的搜索表达式。
+
+```sql
+SELECT note_text
+FROM productnotes
+WHERE Match(note_text) Against('rabbit');
+```
+
+全文本搜索的一 个重要部分就是对结果排序。具有较高等级的行先返回（因为这些行很 可能是你真正想要的行）。
+
+全文本搜索提供了简单LIKE搜索不能提供的功能。而且， 由于数据是索引的，全文本搜索还相当快。
+
+#### 使用查询扩展
+
+查询扩展用来设法放宽所返回的全文本搜索结果的范围。
+
+进行一个简单的全文本搜索，没有查询扩展：
+
+```sql
+SELECT note_text
+FROM productnotes
+WHERE Match(note_text) Against('anvils');
+```
+
+相同的搜索，这次使用查询扩展：
+
+```sql
+SELECT note_text
+FROM productnotes
+WHERE Match(note_text) Against('anvils' WITH QUERY EXPANSION);
+```
+
+#### 布尔文本搜索
+
+MySQL支持全文本搜索的另外一种形式，称为布尔方式（boolean mode）。
+
+#### 全文本搜索的使用说明
+
+## ch19 插入数据
+
+### 插入数据
+
+INSERT是用来插入（或添加）行到数据库表的。
+
+### 插入完整的行
+
+使用基本的INSERT语法，它要求指定表名和被插入到新行中的值。
+
+### 插入多个行
+
+### 插入检索出的数据
+
+## ch20 更新和删除数据
+
+### 更新数据
+
+使用UPDATE语句。可采用两种方式使用UPDATE：
+
+- 更新表中特定行。
+- 更新表中所有行。
+
+UPDATE语句由3部分组成：
+
+- 要更新的表
+- 列名和它们的新值
+- 确定要更新行的过滤条件
+
+例：
+
+```sql
+UPDATE customers
+SET cust_email = 'elmer@fudd.com'
+WHERE cust_id = 10005;
+```
+
+UPDATE语句以WHERE子句结束，它告诉MySQL更新哪一行。没有 WHERE子句，MySQL将会用这个电子邮件地址更新customers表中所有 行。
+
+为了删除某个列的值，可设置它为NULL：
+
+```sql
+UPDATE customers
+SET cust_email = NULL
+WHERE cust_id = 10005;
+```
+
+### 删除数据
+
+使用DELETE语句。可以两种方 式使用DELETE：
+
+- 从表中删除特定的行
+- 从表中删除所有行
+
+例：
+
+```sql
+DELETE FROM customers
+WHERE cust_id = 10005;
+```
+
+DELETE不需要列名或通配符。DELETE删除整行而不是删除列。为了 删除指定的列，请使用UPDATE语句
+
+### 更新和删除的指导原则
+
+## ch 21 创建和操纵表
+
+### 创建表
+
+两种创建表的方法：
+
+- 使用具有交互式创建和管理表的工具（如第2章讨论的工具）；
+- 表也可以直接用MySQL语句操纵
+
+#### 表创建基础
+
+利用CREATE TABLE创建表，必须给出下列信息:
+
+- 新表的名字，在关键字CREATE TABLE之后给出；
+- 表列的名字和定义，用逗号分隔。
+
+#### 使用NULL值
+
+#### 主键再介绍
+
+#### 使用AUTO_INCREMENT
+
+#### 指定默认值
+
+#### 引擎类型
+
+### 更新表
+
+### 删除表
+
+### 重命名表
 
 
 
