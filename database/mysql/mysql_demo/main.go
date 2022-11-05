@@ -239,5 +239,5 @@ func main() {
 	// prepareQueryDemo()
 	// prepareInsertDemo()
 	// sqlInjectDemo("xxx' union select * from user #")
-	transactionDemo()
+	// transactionDemo()
 }
